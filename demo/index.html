@@ -466,6 +466,10 @@ $(document).ready(function() {
           }
         }
        });
+       
+       hls.on(Hls.Events.FRAG_LOADED,function(data) {
+         console.info(data)
+       });
 
        hls.on(Hls.Events.ERROR, function(event,data) {
         switch(data.details) {
