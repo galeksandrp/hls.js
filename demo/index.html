@@ -466,6 +466,10 @@ $(document).ready(function() {
           }
         }
        });
+       
+       hls.on(Hls.Events.FRAG_LOADED,function(data1, data2) {
+         console.info(data1, JSON.stringify({byteLength: data2.payload.byteLength}))
+       });
 
        hls.on(Hls.Events.ERROR, function(event,data) {
         switch(data.details) {
