@@ -4,7 +4,15 @@ var magnetURI = 'magnet:?xt=urn:btih:d1eaf779b36c0f6d7b2eaeb7f9c5e524472de951&dn
 //curl http://www.streambox.fr/playlists/x36xhzz/url_2/193039199_mp4_h264_aac_ld_7.m3u8
 
 function customLoaderP(onSuccess) {
-  this.load = function(url,responseType,onSuccess,onError,onTimeOut,timeout,maxRetry,retryDelay) {
+  this.load = function(context, config, callbacks) {
+    var url = context.url;
+    var responseType = context.responseType;
+    var onSuccess = callbacks.onSuccess;
+    var onError = callbacks.onError;
+    var onTimeOut = callbacks.onTimeout;
+    var timeout = config.timeout;
+    var maxRetry = config.maxRetry;
+    var retryDelay = config.retryDelay;
     strings = ['#EXTM3U',
     '#EXT-X-VERSION:3',
     '#EXT-X-PLAYLIST-TYPE:VOD',
@@ -38,7 +46,20 @@ function customLoader() {
   maxRetry : max nb of load retry
   retryDelay : delay between an I/O error and following connection retry (ms). this to avoid spamming the server.
   */
-  this.load = function(url,responseType,onSuccess,onError,onTimeOut,timeout,maxRetry,retryDelay) {
+  this.load = function(context, config, callbacks) {
+	  var url = context.url;
+	  var responseType = context.responseType;
+	  var onSuccess = callbacks.onSuccess;
+	  var onError = callbacks.onError;
+	  var onTimeOut = callbacks.onTimeout;
+	  var timeout = config.timeout;
+	  var maxRetry = config.maxRetry;
+	  var retryDelay = config.retryDelay;
+
+    this.context = context;
+    this.config = config;
+    this.callbacks = callbacks;
+	  
     this.onSuccess = onSuccess;
     
     var self = this;
@@ -77,7 +98,8 @@ function customLoader() {
     };
     //console.log(event, event.getResponseHeader('Date'));
     this.stats.tload = performance.now();
-    this.onSuccess({currentTarget: event}, this.stats);
+    //this.onSuccess({currentTarget: event}, this.stats);
+    this.onSuccess({data: event.response}, this.stats, this.context);
   }
 
   this.loadprogress = function(event) {
