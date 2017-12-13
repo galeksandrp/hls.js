@@ -3,17 +3,7 @@ var magnetURI = 'magnet:?xt=urn:btih:d1eaf779b36c0f6d7b2eaeb7f9c5e524472de951&dn
 
 //curl http://www.streambox.fr/playlists/x36xhzz/url_2/193039199_mp4_h264_aac_ld_7.m3u8
 
-function customLoaderP(onSuccess) {
-  this.load = function(context, config, callbacks) {
-    var url = context.url;
-    var responseType = context.responseType;
-    var onSuccess = callbacks.onSuccess;
-    var onError = callbacks.onError;
-    var onTimeOut = callbacks.onTimeout;
-    var timeout = config.timeout;
-    var maxRetry = config.maxRetry;
-    var retryDelay = config.retryDelay;
-    strings = ['#EXTM3U',
+var strings = ['#EXTM3U',
     '#EXT-X-VERSION:3',
     '#EXT-X-PLAYLIST-TYPE:VOD',
     '#EXT-X-TARGETDURATION:10',
@@ -28,6 +18,18 @@ function customLoaderP(onSuccess) {
     '#EXTINF:10.000,',
     'magnet:?xt=urn:btih:0c96911da7c860a9ae2a26ed8a96c10590508407',
     '#EXT-X-ENDLIST'];
+var enc = new TextEncoder("utf-8");
+
+function customLoaderP(onSuccess) {
+  this.load = function(context, config, callbacks) {
+    var url = context.url;
+    var responseType = context.responseType;
+    var onSuccess = callbacks.onSuccess;
+    var onError = callbacks.onError;
+    var onTimeOut = callbacks.onTimeout;
+    var timeout = config.timeout;
+    var maxRetry = config.maxRetry;
+    var retryDelay = config.retryDelay;
     onSuccess({currentTarget: {getResponseHeader: function(){return ''}, responseText: strings.join('\n'), response: strings.join('\n')}}, {})
   }
 }
@@ -120,7 +122,7 @@ function customLoader() {
 if(Hls.isSupported()) {
   var video = document.getElementById('video');
   var hls = new Hls({fLoader: customLoader});
-  hls.loadSource('193039199_mp4_h264_aac_ld_7.m3u8');
+  hls.loadSource(URL.createObjectURL(new Blob([enc.encode(strings.join('\n'))])));
   hls.attachMedia(video);
   hls.on(Hls.Events.MANIFEST_PARSED,function() {
     video.play();
