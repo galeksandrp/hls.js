@@ -201,5 +201,9 @@ module.exports = {
     description: 'PDT before each segment, 1.59s start gap',
     abr: true,
     startSeek: true
+  },
+  AppleLowLatencyHlsHoldBack: {
+    url: 'https://playertest.longtailvideo.com/adaptive/low-latency-hls/archived/hold-back-8s.m3u8',
+    description: 'Apple Low-Latency HLS archived sample. No blocking, no delta, PART-HOLD-BACK=2.004,HOLD-BACK=8, Safari MediaError 4'
   }
 };
