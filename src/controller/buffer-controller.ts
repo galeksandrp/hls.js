@@ -481,8 +481,8 @@ export default class BufferController implements ComponentAPI {
       return;
     }
     const start = data.start;
-    const delta = Math.abs(audioBuffer.timestampOffset - start);
-    if (delta < 0.1) {
+    const delta = start - audioBuffer.timestampOffset;
+    if (Math.abs(delta) < 0.1) {
       return;
     }
     // SourceBuffers can be aborted while the updating flag is true, but only if it is because of an append operation -
@@ -501,7 +501,7 @@ export default class BufferController implements ComponentAPI {
         },
         onComplete() {
           logger.log(
-            `[buffer-controller]: Updating audio SourceBuffer timestampOffset to ${start}`
+            `[buffer-controller]: Updating audio SourceBuffer timestampOffset to ${start} (${delta})`
           );
           audioBuffer.timestampOffset = start;
         },
@@ -515,7 +515,7 @@ export default class BufferController implements ComponentAPI {
       operationQueue.insertAbort(operation, type);
     } else {
       logger.log(
-        `[buffer-controller]: Updating audio SourceBuffer timestampOffset to ${start}`
+        `[buffer-controller]: Updating audio SourceBuffer timestampOffset to ${start} (${delta})`
       );
       audioBuffer.timestampOffset = start;
     }
